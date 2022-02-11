@@ -13,6 +13,7 @@ export class API {
 
     const data = await res.json();
     this.token = data.access_token;
+    console.log(this.token);
   }
 
   private async request(url: string, options?: RequestInit | undefined) {
@@ -34,6 +35,12 @@ export class API {
 
   public async fetchWikiPages() {
     return this.request(`https://oauth.reddit.com/r/mead/wiki/pages`);
+  }
+
+  public async fetchPage(title: string) {
+    const url = new URL("https://oauth.reddit.com/r/mead/wiki/page");
+    url.searchParams.set("page", title);
+    return this.request(url.toString());
   }
 }
 
