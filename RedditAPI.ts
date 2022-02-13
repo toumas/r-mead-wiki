@@ -37,9 +37,9 @@ export class API {
     return this.request(`https://oauth.reddit.com/r/mead/wiki/pages`);
   }
 
-  public async fetchPage(title: string) {
+  public async fetchPage(slug: string[]) {
     const url = new URL("https://oauth.reddit.com/r/mead/wiki/page");
-    url.searchParams.set("page", title);
+    url.searchParams.set("page", slug.join("/"));
     return this.request(url.toString());
   }
 }
