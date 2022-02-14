@@ -1,8 +1,13 @@
+import { useEffect } from "react";
+import { useRouter } from "next/router";
 import { serialize } from "next-mdx-remote/serialize";
 import { MDXRemote } from "next-mdx-remote";
 import { RedditAPI } from "../RedditAPI";
 import { components } from "../components/map";
 import { buildAlgoliaSearch } from "../scripts/build-algolia-search";
+import { promises as fs } from "fs";
+import path from "path";
+import { slugToObject } from "../utils.ts";
 
 <MDXRemote {...props.source} components={components} />
 
@@ -11,22 +16,31 @@ export async function getStaticProps({ params: { slug } }) {
     data: { content_md },
   } = await RedditAPI.fetchPage(slug);
   const mdxSource = await serialize(content_md);
+  const pagesDirectory = path.join(process.cwd(), "public/_pages/");
+  const { filename, parentPath } = slugToObject(slug);
+  await fs.mkdir(path.join(process.cwd(), `public/_pages/${parentPath}`), {
+    recursive: true,
+  });
+  await fs.writeFile(
+    path.join(process.cwd(), `public/_pages/${parentPath}/${filename}.json`),
+    JSON.stringify({ pageProps: { source: mdxSource } })
+  );
   await buildAlgoliaSearch([
     {
       content_md,
-      objectID: slug.join("/"),
+      objectID: `${parentPath}/${filename}`,
     },
   ]);
   return { props: { source: mdxSource } };
 }
 
 export async function getStaticPaths() {
-  const { data: pages } = await RedditAPI.fetchWikiPages();
-  const paths = pages.map((path) => ({
+  const { data: pageSlugs } = await RedditAPI.fetchWikiPages();
+  const pageProps = pageSlugs.map((path) => ({
     params: { slug: path.split("/") },
   }));
   return {
-    paths,
-    fallback: false, // false or 'blocking'
+    paths: pageProps,
+    fallback: false,
   };
 }

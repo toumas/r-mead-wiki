@@ -13,7 +13,6 @@ export class API {
 
     const data = await res.json();
     this.token = data.access_token;
-    console.log(this.token);
   }
 
   private async request(url: string, options?: RequestInit | undefined) {

@@ -12,5 +12,13 @@ const withMDX = require("@next/mdx")({
 
 module.exports = withMDX({
   reactStrictMode: true,
-  pageExtensions: ["js", "jsx", "md", "mdx"],
+  pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
+  webpack: (config) => {
+    config.resolve.fallback = { ...config.resolve.fallback, fs: false };
+    return config;
+  },
+  generateBuildId: async () => {
+    // You can, for example, get the latest git commit hash here
+    return "my-build-id";
+  },
 });
