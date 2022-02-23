@@ -1,1 +1,5 @@
-export const components = {};
+import { Anchor } from "./Anchor";
+
+export const components = {
+  a: Anchor,
+};
