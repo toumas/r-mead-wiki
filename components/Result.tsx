@@ -15,7 +15,7 @@ export const Result = memo(
     source: Source;
     matchedWords: string[] | undefined;
   }) {
-    const resultElement = useRef<HTMLDivElement>(null);
+    const resultElement = useRef<HTMLAnchorElement>(null);
     const mark = useRef<Mark>();
 
     useLayoutEffect(() => {
@@ -49,12 +49,16 @@ export const Result = memo(
 
     return (
       <Link href={`${objectID}`} passHref={true}>
-        <div
+        <a
           ref={resultElement}
-          style={{ maxHeight: "12.5rem", overflowY: "hidden" }}
+          style={{
+            display: "block",
+            maxHeight: "12.5rem",
+            overflowY: "hidden",
+          }}
         >
           <MDXRemote {...source} />
-        </div>
+        </a>
       </Link>
     );
   },
