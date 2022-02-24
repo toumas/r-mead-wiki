@@ -1,5 +1,5 @@
 import { useEffect, useReducer } from "react";
-import { connectStateResults } from "react-instantsearch-dom";
+import { connectStateResults, Pagination } from "react-instantsearch-dom";
 import produce from "immer";
 import { Hit, SearchResults, SearchState } from "react-instantsearch-core";
 import { Result } from "./Result";
@@ -81,6 +81,7 @@ export function Hits({
       )}
       {(searchResults?.hits.length as number) > 0 && validQuery && (
         <>
+          <Pagination />
           {searchResults?.hits.map((hit: Hit, index: number) => {
             return (
               <div
@@ -102,6 +103,7 @@ export function Hits({
               </div>
             );
           })}
+          <Pagination />
         </>
       )}
     </>
