@@ -11,7 +11,11 @@ const searchClient = algoliasearch(
 export function Search() {
   return (
     <InstantSearch searchClient={searchClient} indexName="wiki">
-      <Configure hitsPerPage={5} />
+      <Configure
+        hitsPerPage={5}
+        highlightPreTag="<algolia-highlight>"
+        highlightPostTag="</algolia-highlight>"
+      />
       <SearchBox />
       <Hits />
     </InstantSearch>

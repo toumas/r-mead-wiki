@@ -2,7 +2,7 @@ import algoliasearch from "algoliasearch";
 
 export interface WikiObject {
   objectID: string;
-  content_md: string;
+  markdown: string;
 }
 
 export async function buildAlgoliaSearch(objects: WikiObject[]) {

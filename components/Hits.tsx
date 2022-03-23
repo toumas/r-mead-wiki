@@ -94,9 +94,10 @@ export function Hits({
                     <Result
                       objectID={hit.objectID}
                       matchedWords={
-                        hit._highlightResult.content_md?.matchedWords
+                        hit._highlightResult.textContent?.matchedWords
                       }
                       source={pageData[hit.objectID]?.pageProps.source}
+                      highlightValue={hit._highlightResult.textContent?.value}
                     />
                   </div>
                 )}
