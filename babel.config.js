@@ -7,6 +7,7 @@ module.exports = function (api) {
       "next/babel",
       {
         "preset-react": {
+          runtime: "automatic",
           importSource:
             !isServer && isCallerDevelopment
               ? "@welldone-software/why-did-you-render"
@@ -16,5 +17,11 @@ module.exports = function (api) {
     ],
   ];
 
-  return { presets };
+  return {
+    presets,
+    plugins: [
+      "babel-plugin-macros",
+      ["babel-plugin-styled-components", { ssr: true }],
+    ],
+  };
 };
