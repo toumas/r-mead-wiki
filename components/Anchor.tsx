@@ -17,7 +17,7 @@ export function Anchor({ href, children }: AnchorHTMLAttributes<{}>) {
 
     return (
       <Link href={path}>
-        <a>{children}</a>
+        <a className="text-brand-yellow">{children}</a>
       </Link>
     );
   }
