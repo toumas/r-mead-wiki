@@ -14,11 +14,11 @@ export interface ContainerProps {
 }
 
 export function Container({ children }: ContainerProps) {
-  const [{ md }, containerRef] = useContainerQuery(query);
+  const [{ md }, containerRef, ready] = useContainerQuery(query);
 
   return (
     <StyledContainer ref={containerRef} className="p-5" md={md}>
-      {children}
+      {ready && children}
     </StyledContainer>
   );
 }
