@@ -1,6 +1,7 @@
 import { Anchor } from "./Anchor";
 import { HorizontalRule } from "./Hr";
 import { H1, H2, H3, H4, H5, H6 } from "./Heading";
+import { Text } from "./Text";
 
 export const components = {
   a: Anchor,
@@ -11,4 +12,5 @@ export const components = {
   h4: H4,
   h5: H5,
   h6: H6,
+  p: Text,
 };
