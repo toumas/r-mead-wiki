@@ -16,7 +16,10 @@ module.exports = {
         return {
           "brand-black": black,
           "brand-light-black": `#${tinycolor(black).lighten().toHex()}`,
-          "brand-bright-black": `#${tinycolor(black).brighten().brighten().toHex()}`,
+          "brand-bright-black": `#${tinycolor(black)
+            .brighten()
+            .brighten()
+            .toHex()}`,
           "brand-green": green,
           "brand-bright-green": `#${tinycolor(green).brighten().toHex()}`,
           "brand-yellow": "#ffc62c",
