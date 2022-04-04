@@ -17,7 +17,7 @@ export function Container({ children }: ContainerProps) {
   const [{ md }, containerRef, ready] = useContainerQuery(query);
 
   return (
-    <StyledContainer ref={containerRef} className="p-5" md={md}>
+    <StyledContainer ref={containerRef} md={md}>
       {ready && children}
     </StyledContainer>
   );
