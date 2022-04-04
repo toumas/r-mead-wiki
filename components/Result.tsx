@@ -5,6 +5,8 @@ import Link from "next/link";
 import { memo, useRef, useLayoutEffect, useCallback, useEffect } from "react";
 import md from "commonmark-helpers";
 import { Source } from "./Hits";
+import { components } from "./map";
+import { UnfocusableAnchor } from "./Anchor";
 
 interface Range {
   start?: number;
@@ -79,6 +81,7 @@ export const Result = memo(
 
         // @ts-ignore
         mark.current?.markRanges(ranges, {
+          className: "bg-brand-bright-black text-brand-bright-green",
           done: function () {
             const firstMarkElement =
               resultElement.current?.querySelector("mark");
@@ -101,15 +104,30 @@ export const Result = memo(
 
     return (
       <Link href={`${objectID}`} passHref={true}>
-        <a
-          style={{
-            display: "block",
-            maxHeight: "12.5rem",
-            overflowY: "hidden",
-          }}
-        >
-          <div ref={resultElement}>
-            <MDXRemote {...source} />
+        <a className="grid grid-cols-[min-content_1fr] items-center gap-1 text-brand-green no-underline">
+          <svg
+            aria-hidden={true}
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-5 w-5 text-brand-yellow"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fillRule="evenodd"
+              d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"
+              clipRule="evenodd"
+            />
+          </svg>
+          <span className="text-brand-yellow">/{objectID}</span>
+          <div
+            ref={resultElement}
+            tabIndex={-1}
+            className="col-start-2 max-h-20 overflow-hidden"
+          >
+            <MDXRemote
+              {...source}
+              components={{ ...components, a: UnfocusableAnchor }}
+            />
           </div>
         </a>
       </Link>

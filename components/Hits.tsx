@@ -1,8 +1,10 @@
 import { useEffect, useReducer } from "react";
-import { connectStateResults, Pagination } from "react-instantsearch-dom";
+import { connectStateResults } from "react-instantsearch-dom";
 import produce from "immer";
 import { Hit, SearchResults, SearchState } from "react-instantsearch-core";
 import { Result } from "./Result";
+import { List } from "./List";
+import { Pagination } from "./Pagination";
 
 export interface Source {
   compiledSource: string;
@@ -81,29 +83,26 @@ export function Hits({
       )}
       {(searchResults?.hits.length as number) > 0 && validQuery && (
         <>
-          <Pagination />
-          {searchResults?.hits.map((hit: Hit, index: number) => {
-            return (
-              <div
-                style={{ border: "1px gray solid" }}
-                tabIndex={index}
-                key={hit.objectID}
-              >
-                {pageData[hit.objectID] && (
-                  <div id="search-results">
-                    <Result
-                      objectID={hit.objectID}
-                      matchedWords={
-                        hit._highlightResult.textContent?.matchedWords
-                      }
-                      source={pageData[hit.objectID]?.pageProps.source}
-                      highlightValue={hit._highlightResult.textContent?.value}
-                    />
-                  </div>
-                )}
-              </div>
-            );
-          })}
+          <List>
+            {searchResults?.hits.map((hit: Hit, index: number) => {
+              return (
+                <div key={hit.objectID}>
+                  {pageData[hit.objectID] && (
+                    <div id="search-results">
+                      <Result
+                        objectID={hit.objectID}
+                        matchedWords={
+                          hit._highlightResult.textContent?.matchedWords
+                        }
+                        source={pageData[hit.objectID]?.pageProps.source}
+                        highlightValue={hit._highlightResult.textContent?.value}
+                      />
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </List>
           <Pagination />
         </>
       )}
