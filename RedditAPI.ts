@@ -35,6 +35,12 @@ export class API {
   public async fetchWikiPages() {
     return this.request(`https://oauth.reddit.com/r/mead/wiki/pages`);
   }
+
+  public async fetchPage(slug: string[]) {
+    const url = new URL("https://oauth.reddit.com/r/mead/wiki/page");
+    url.searchParams.set("page", slug.join("/"));
+    return this.request(url.toString());
+  }
 }
 
 export const RedditAPI = new API();
