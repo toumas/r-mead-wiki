@@ -30,7 +30,7 @@ module.exports = {
         if (typeof theme === "undefined") {
           return {};
         }
-        return {
+        themeRef = {
           DEFAULT: {
             css: {
               maxWidth: "100%",
