@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import path from "path";
 import fs from "fs/promises";
-import { slugToObject } from "../../utils";
+import { slugToObject } from "../../../utils";
 
 export default async function handler(
   req: NextApiRequest,

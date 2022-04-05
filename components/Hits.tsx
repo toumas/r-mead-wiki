@@ -62,7 +62,7 @@ export function Hits({
 
   useEffect(() => {
     async function fetchPageJson(objectID: string) {
-      const res = await fetch(`/api/${objectID}`);
+      const res = await fetch(`/api/page/${objectID}`);
       const data = await res.json();
       dispatch({
         type: Actions.addPage,
