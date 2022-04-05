@@ -12,7 +12,7 @@ const query = {
 };
 
 export const StyledDialogContent = styled(DialogContent)`
-  ${tw`bg-brand-light-black w-full p-4 flex flex-col min-h-screen m-0 relative`}
+  ${tw`bg-brand-light-black w-full p-4 flex flex-col min-h-screen m-0 relative overflow-y-scroll`}
   ${({ md }: { md: boolean }) =>
     md &&
     tw`m-auto max-w-[58.5rem] min-h-0 h-auto max-h-screen overflow-y-auto`}
@@ -32,7 +32,10 @@ export function SearchModal() {
   }, [push]);
 
   return (
-    <StyledDialogOverlay isOpen={/\?query=/.test(asPath)} onDismiss={handleClose}>
+    <StyledDialogOverlay
+      isOpen={/\?query=/.test(asPath)}
+      onDismiss={handleClose}
+    >
       <StyledDialogContent md={md} ref={ref}>
         <button
           className="close-button absolute right-0 top-0 -translate-x-2 translate-y-2 self-start"
