@@ -8,13 +8,20 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const slugObject = slugToObject(req.query.slug);
-  const file = await fs.readFile(
-    path.join(
-      process.cwd(),
-      `${process.env.NODE_ENV === "development" ? "/public" : ""}/_pages/${
-        slugObject.path
-      }`
-    )
-  );
-  res.status(200).json(JSON.parse(file.toString()));
+  try {
+    const basePath = process.cwd();
+    const file = await fs.readFile(
+      path.join(
+        basePath,
+        "../../",
+        `${process.env.NODE_ENV === "development" ? "compiledpages" : ""}/${
+          slugObject.path
+        }`
+      )
+    );
+    res.status(200).json(JSON.parse(file.toString()));
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({});
+  }
 }

@@ -17,13 +17,13 @@ export async function getStaticProps({ params: { slug } }) {
   const { convertedMarkdown, textContent } =
     convertMarkdownToRedditFlavor(content_md);
   const mdxSource = await serialize(convertedMarkdown);
-  const pagesDirectory = path.join(process.cwd(), "public/_pages/");
+  const pagesDirectory = path.join(process.cwd(), "compiledpages/");
   const { filename, parentPath } = slugToObject(slug);
-  await fs.mkdir(path.join(process.cwd(), `public/_pages/${parentPath}`), {
+  await fs.mkdir(path.join(process.cwd(), `compiledpages/${parentPath}`), {
     recursive: true,
   });
   await fs.writeFile(
-    path.join(process.cwd(), `public/_pages/${parentPath}/${filename}.json`),
+    path.join(process.cwd(), `compiledpages/${parentPath}/${filename}.json`),
     JSON.stringify({ pageProps: { source: mdxSource } })
   );
   await buildAlgoliaSearch([
