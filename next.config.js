@@ -13,8 +13,11 @@ const withMDX = require("@next/mdx")({
 module.exports = withMDX({
   reactStrictMode: true,
   pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
-  webpack: (config) => {
-    config.resolve.fallback = { ...config.resolve.fallback, fs: false };
+  webpack: (config, { isServer }) => {
+    // Fixes npm packages that depend on `fs` module
+    if (!isServer) {
+      config.resolve.fallback = { ...config.resolve.fallback, fs: false };
+    }
     return config;
   },
   generateBuildId: async () => {
