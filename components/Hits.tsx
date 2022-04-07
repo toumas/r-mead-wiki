@@ -5,6 +5,7 @@ import { Hit, SearchResults, SearchState } from "react-instantsearch-core";
 import { Result } from "./Result";
 import { List } from "./List";
 import { Pagination } from "./Pagination";
+import { Placeholder } from "./Placeholder";
 
 export interface Source {
   compiledSource: string;
@@ -99,6 +100,7 @@ export function Hits({
                       />
                     </div>
                   )}
+                  {!pageData[hit.objectID] && <Placeholder />}
                 </div>
               );
             })}
