@@ -6,6 +6,7 @@ import { VStack } from "./VStack";
 export type CommonStackProps = {
   children: ReactNode;
   className?: string;
+  items?: TwStyle;
   justify?: TwStyle;
   vertical?: boolean;
 };

@@ -13,6 +13,8 @@ export type VStackStyleProps = Exclude<StackProps, "children | className">;
 
 export const VerticalStack = styled.div`
   ${tw`flex flex-col self-stretch items-center`}
+  ${({ items }: VStackStyleProps) => items}
+  ${({ justify }: VStackStyleProps) => justify}
   & > * {
     ${({ mb }: VStackStyleProps) => mb ?? tw`mb-4`}
   }

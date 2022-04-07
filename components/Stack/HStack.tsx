@@ -13,6 +13,7 @@ export type HStackStyleProps = Exclude<HStackProps, "children | className">;
 
 export const HorizontalStack = styled.div`
   ${tw`flex self-stretch items-center`}
+  ${({ items }: HStackStyleProps) => items}
   ${({ justify }: HStackStyleProps) => justify}
   & > * {
     ${({ mr }: HStackStyleProps) => mr ?? tw`mr-4`}
