@@ -1,6 +1,13 @@
 import VisuallyHidden from "@reach/visually-hidden";
 import { useRouter } from "next/router";
-import { useState, ChangeEvent, useEffect, useRef } from "react";
+import {
+  useState,
+  ChangeEvent,
+  useEffect,
+  useRef,
+  FormEvent,
+  useCallback,
+} from "react";
 import { SearchBoxProvided } from "react-instantsearch-core";
 import { connectSearchBox } from "react-instantsearch-dom";
 import tw, { styled } from "twin.macro";
@@ -24,6 +31,10 @@ function SearchBox({ refine }: SearchBoxProvided) {
     setDirty(true);
   };
 
+  const handleSubmit = useCallback((e: FormEvent) => {
+    e.preventDefault();
+  }, []);
+
   useEffect(() => {
     if (inputRef.current) {
       inputRef.current.focus();
@@ -43,7 +54,7 @@ function SearchBox({ refine }: SearchBoxProvided) {
   }, [refine, router.query.query]);
 
   return (
-    <form className="">
+    <form onSubmit={handleSubmit}>
       <VisuallyHidden>
         <label htmlFor="algolia_search">Search</label>
       </VisuallyHidden>
