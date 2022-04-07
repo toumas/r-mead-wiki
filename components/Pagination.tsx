@@ -23,6 +23,7 @@ export const PaginationButton = styled.button`
   &[disabled] {
     ${tw`cursor-not-allowed`}
   }
+  ${({ active }: { active?: boolean }) => active && tw`underline`}
 `;
 
 const query = {
@@ -157,7 +158,10 @@ export const CustomPagination = memo(function Pagination({
               new Array(nbPages).fill(null).map((_, index) => {
                 return (
                   <li key={index}>
-                    <PaginationButton onClick={handleOnClick(index + 1)}>
+                    <PaginationButton
+                      active={currentRefinement === index + 1}
+                      onClick={handleOnClick(index + 1)}
+                    >
                       <Text>{index + 1}</Text>
                     </PaginationButton>
                   </li>
