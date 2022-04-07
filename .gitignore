@@ -11,7 +11,7 @@
 # next.js
 /.next/
 /out/
-compiledpages
+public/_pages/
 
 # production
 /build
