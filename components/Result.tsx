@@ -13,6 +13,18 @@ interface Range {
   length?: number;
 }
 
+function getOverflowingParentElement(
+  element: HTMLElement
+): undefined | HTMLElement {
+  if (element.scrollHeight > element.clientHeight) {
+    return element;
+  } else if (element.parentElement) {
+    return getOverflowingParentElement(element.parentElement);
+  } else {
+    return undefined;
+  }
+}
+
 export const Result = memo(
   function SearchResult({
     objectID,
@@ -85,10 +97,18 @@ export const Result = memo(
           done: function () {
             const firstMarkElement =
               resultElement.current?.querySelector("mark");
-            const xBefore = window.scrollX;
-            const yBefore = window.scrollY;
-            firstMarkElement?.scrollIntoView();
-            window.scrollTo(xBefore, yBefore);
+
+            if (firstMarkElement) {
+              if (firstMarkElement.parentElement) {
+                const overflowingParent = getOverflowingParentElement(
+                  firstMarkElement.parentElement
+                );
+                if (overflowingParent) {
+                  overflowingParent.scrollTop =
+                    firstMarkElement.offsetTop - overflowingParent.offsetTop;
+                }
+              }
+            }
           },
         });
       }
