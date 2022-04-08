@@ -62,12 +62,14 @@ export function getPaginationArr(arr: any[], p: number, i: number) {
     return arr;
   }
 
-  const endOverflowAmount = i + 1 + p - arr.length + 1;
-  const endOverflow = !!!arr[i + 1 + p];
+  const arrCopy = ([] as any[]).concat(arr);
+  const remainingItems = ([] as any[]).concat(arrCopy).splice(i + 1);
+  const endOverflowAmount = p - remainingItems.length;
+  const endOverflow = !!!arr[i + p];
   const startOverflow = !!!arr[i - p];
   const startOverflowAmount = -(i - p);
-  let startIndex = endOverflow ? i + 1 - p - endOverflowAmount : i - p;
 
+  let startIndex = endOverflow ? i - p - endOverflowAmount : i - p;
   let endIndex = endOverflow ? undefined : i + 1 + p;
 
   if (startOverflow) {
@@ -75,6 +77,10 @@ export function getPaginationArr(arr: any[], p: number, i: number) {
     if (!endOverflow) {
       endIndex = (endIndex ?? 0) + startOverflowAmount;
     }
+  }
+
+  if (startIndex < 0) {
+    startIndex = 0;
   }
 
   return arr.slice(startIndex, endIndex);

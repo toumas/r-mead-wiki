@@ -88,8 +88,8 @@ describe("Pagination", () => {
     ]);
   });
 
-  it("should return with 2 padding at index 2", () => {
-    const result = getPaginationArr(arr, 2, 2);
+  it("should return with 3 padding at index 4", () => {
+    const result = getPaginationArr(arr, 3, 4);
     expect(result).toStrictEqual([
       "pizza",
       "hamburger",
@@ -97,5 +97,11 @@ describe("Pagination", () => {
       "banana",
       "apple",
     ]);
+  });
+
+  it("should return with 8 padding at index 8", () => {
+    const sixteenItems = new Array(16).fill(null).map((_, i) => i + 1);
+    const result = getPaginationArr(sixteenItems, 8, 8);
+    expect(result).toStrictEqual(sixteenItems);
   });
 });
