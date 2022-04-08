@@ -11,6 +11,6 @@ export function slugToObject(slug: string[] | string) {
   return {
     filename,
     parentPath,
-    path: `${parentPath}/${filename}.json`,
+    path: `${`${parentPath}${parentPath && "/"}`}${filename}.json`,
   };
 }
