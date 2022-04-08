@@ -12,7 +12,7 @@ export default async function handler(
       .from("compiled-pages")
       .download(slugObject.path);
     if (error) {
-      throw new Error(error.message);
+      throw new Error(`${error.message}. Path: ${slugObject.path}`);
     }
     if (data === null) {
       res.status(404);
