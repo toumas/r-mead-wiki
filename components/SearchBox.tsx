@@ -1,5 +1,7 @@
 import VisuallyHidden from "@reach/visually-hidden";
+import { isNil } from "lodash";
 import { useRouter } from "next/router";
+import QueryString from "qs";
 import {
   useState,
   ChangeEvent,
@@ -12,6 +14,7 @@ import { SearchBoxProvided } from "react-instantsearch-core";
 import { connectSearchBox } from "react-instantsearch-dom";
 import tw, { styled } from "twin.macro";
 import { useDebounce } from "usehooks-ts";
+import useNavigation from "../hooks/usePush";
 import { Stack } from "./Stack/Stack";
 
 const StyledStack = styled(Stack)`
@@ -20,38 +23,58 @@ const StyledStack = styled(Stack)`
 
 function SearchBox({ refine }: SearchBoxProvided) {
   const router = useRouter();
-  const [value, setValue] = useState<string>("");
-  const debouncedValue = useDebounce<string>(value, 250);
-  const [dirty, setDirty] = useState(false);
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    refine(event.currentTarget.value);
-    setValue(event.target.value);
-    setDirty(true);
-  };
+  // const { push, replace } = useNavigation();
 
   const handleSubmit = useCallback((e: FormEvent) => {
     e.preventDefault();
   }, []);
+
+  const handleChange = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      const {
+        target: { value },
+      } = event;
+      if (value.length >= 3) {
+        const searchParams = QueryString.parse(window.location.search, {
+          ignoreQueryPrefix: true,
+        });
+
+        const nextSearchParams = QueryString.stringify(
+          { ...searchParams, query: value, page: 1 },
+          { addQueryPrefix: true }
+        );
+
+        if (searchParams.query?.length === 0) {
+          setTimeout(() => {
+            router.replace(`${window.location.origin}/${nextSearchParams}`);
+          }, 220);
+        } else if ((searchParams.query as string[])?.[0]) {
+          router.push(`${window.location.origin}/${nextSearchParams}`);
+        }
+      }
+    },
+    [router]
+  );
+
+  useEffect(() => {
+    if (router.query.query) {
+      refine(router.query.query);
+    }
+  }, [refine, router.query.query]);
+
+  useEffect(() => {
+    if (router.query.query || router.query.page) {
+      refine(router.query.query);
+    }
+  }, [refine, router.query.page, router.query.query]);
+
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (inputRef.current) {
       inputRef.current.focus();
     }
   }, []);
-
-  useEffect(() => {
-    if (debouncedValue.length > 0 || dirty) {
-      router.push(router.asPath.replace(/(?<=query=).*/, debouncedValue));
-    }
-  }, [debouncedValue, dirty]);
-
-  useEffect(() => {
-    if (router.query.query?.[0]) {
-      refine(router.query.query);
-    }
-  }, [refine, router.query.query]);
 
   return (
     <form onSubmit={handleSubmit}>
