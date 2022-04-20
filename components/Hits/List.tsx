@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Hit, SearchResults } from "react-instantsearch-core";
 import { List } from "../List";
 import { Pagination } from "../Pagination";
@@ -8,9 +9,14 @@ import { PagePropsObjectByKey } from "./types";
 export interface HitsListProps {
   results: SearchResults | null;
   pageData: PagePropsObjectByKey;
+  setExpanded: (value: boolean) => void;
 }
 
-export function HitsList({ results, pageData }: HitsListProps) {
+export function HitsList({ results, pageData, setExpanded }: HitsListProps) {
+  useEffect(() => {
+    setExpanded(true);
+  }, [setExpanded]);
+
   return (
     <>
       <List>

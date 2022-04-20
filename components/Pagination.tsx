@@ -129,7 +129,7 @@ export const CustomPagination = memo(function Pagination({
   }, [currentRefinement, router.query.page]);
 
   return (
-    <div ref={ref}>
+    <div className="w-full" ref={ref}>
       {ready && (
         <Stack justify={tw`justify-center`}>
           <StyledPagination>
