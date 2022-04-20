@@ -13,6 +13,7 @@ const StyledStack = styled(Stack)`
 
 function SearchBox({ refine }: SearchBoxProvided) {
   const router = useRouter();
+  const formRef = useRef<HTMLFormElement>(null);
 
   const handleSubmit = useCallback((e: FormEvent) => {
     e.preventDefault();
@@ -54,6 +55,10 @@ function SearchBox({ refine }: SearchBoxProvided) {
   useEffect(() => {
     if (router.query.query || router.query.page) {
       refine(router.query.query);
+
+      if (formRef.current) {
+        formRef.current.scrollIntoView();
+      }
     }
   }, [refine, router.query.page, router.query.query]);
 
@@ -66,7 +71,7 @@ function SearchBox({ refine }: SearchBoxProvided) {
   }, []);
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} ref={formRef}>
       <VisuallyHidden>
         <label htmlFor="algolia_search">Search</label>
       </VisuallyHidden>
