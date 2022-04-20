@@ -1,20 +1,10 @@
 import VisuallyHidden from "@reach/visually-hidden";
-import { isNil } from "lodash";
 import { useRouter } from "next/router";
 import QueryString from "qs";
-import {
-  useState,
-  ChangeEvent,
-  useEffect,
-  useRef,
-  FormEvent,
-  useCallback,
-} from "react";
+import { ChangeEvent, FormEvent, useCallback, useEffect, useRef } from "react";
 import { SearchBoxProvided } from "react-instantsearch-core";
 import { connectSearchBox } from "react-instantsearch-dom";
 import tw, { styled } from "twin.macro";
-import { useDebounce } from "usehooks-ts";
-import useNavigation from "../hooks/usePush";
 import { Stack } from "./Stack/Stack";
 
 const StyledStack = styled(Stack)`
@@ -23,7 +13,6 @@ const StyledStack = styled(Stack)`
 
 function SearchBox({ refine }: SearchBoxProvided) {
   const router = useRouter();
-  // const { push, replace } = useNavigation();
 
   const handleSubmit = useCallback((e: FormEvent) => {
     e.preventDefault();
