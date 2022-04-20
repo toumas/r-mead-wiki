@@ -1,12 +1,12 @@
+import md from "commonmark-helpers";
 import isEqual from "lodash.isequal";
 import Mark from "mark.js";
 import { MDXRemote } from "next-mdx-remote";
 import Link from "next/link";
-import { memo, useRef, useLayoutEffect, useCallback, useEffect } from "react";
-import md from "commonmark-helpers";
-import { Source } from "./Hits";
-import { components } from "./map";
+import { memo, useCallback, useEffect, useLayoutEffect, useRef } from "react";
 import { UnfocusableAnchor } from "./Anchor";
+import { Source } from "./Hits/types";
+import { components } from "./map";
 
 interface Range {
   start?: number;

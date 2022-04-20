@@ -2,7 +2,7 @@ import algoliasearch from "algoliasearch/lite";
 import { Configure, InstantSearch } from "react-instantsearch-dom";
 import QueryString from "qs";
 import { MultipleQueriesQuery } from "@algolia/client-search";
-import Hits from "./Hits";
+import Hits from "./Hits/Hits";
 import SearchBox from "./SearchBox";
 
 const algoliaClient = algoliasearch(
