@@ -198,7 +198,7 @@ export const CustomPagination = memo(function Pagination({
                 );
               }),
               getPadding(params),
-              currentRefinement
+              currentPage - 1
             )}
             <li>
               <Link
