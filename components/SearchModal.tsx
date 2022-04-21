@@ -36,7 +36,7 @@ export function SearchModal() {
       isOpen={/\?query=/.test(asPath)}
       onDismiss={handleClose}
     >
-      <StyledDialogContent md={md} ref={ref}>
+      <StyledDialogContent md={md} ref={ref} aria-label="Search">
         <button
           className="close-button absolute right-0 top-0 -translate-x-2 translate-y-2 self-start"
           onClick={handleClose}
