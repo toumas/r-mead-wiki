@@ -52,6 +52,57 @@ test.describe("search modal", () => {
     await page.waitForURL("http://localhost:3000/");
     expect(page.url()).toBe("http://localhost:3000/");
   });
+
+  test("should remain in subpath after searching", async ({ page }) => {
+    await page.goto("http://localhost:3000/guides/fruit");
+    await openSearchModal(page);
+    await searchForFruit(page);
+    expect(page.url()).toBe(
+      "http://localhost:3000/guides/fruit?query=fruit&page=1"
+    );
+  });
+
+  test("should remain in subpath after searching two times", async ({
+    page,
+  }) => {
+    await page.goto("http://localhost:3000/guides/fruit");
+    await openSearchModal(page);
+    await searchFor(page, "fruit");
+    expect(page.url()).toBe(
+      "http://localhost:3000/guides/fruit?query=fruit&page=1"
+    );
+    await clearInput(page);
+    await searchFor(page, "ben");
+    expect(page.url()).toBe(
+      "http://localhost:3000/guides/fruit?query=ben&page=1"
+    );
+  });
+
+  test("should go to next page on subpath", async ({ page }) => {
+    // Go to http://localhost:3000/
+    await page.goto("http://localhost:3000/");
+    // Go to http://localhost:3000/guides/fruit
+    await page.goto("http://localhost:3000/guides/fruit");
+    // Click text=Search
+    await Promise.all([
+      page.waitForNavigation(/*{ url: 'http://localhost:3000/guides/fruit?query=' }*/),
+      page.locator("text=Search").click(),
+    ]);
+    // Fill [placeholder="Search for content"]
+    await Promise.all([
+      page.waitForNavigation(/*{ url: 'http://localhost:3000/guides/fruit?query=ben&page=1' }*/),
+      page.locator('[placeholder="Search for content"]').fill("ben"),
+    ]);
+    // Click #next
+    await Promise.all([
+      page.waitForNavigation(/*{ url: 'http://localhost:3000/guides/fruit?query=ben&page=2&slug%5B0%5D=guides&slug%5B1%5D=fruit' }*/),
+      page.locator("#next").click(),
+    ]);
+
+    expect(page.url()).toBe(
+      "http://localhost:3000/guides/fruit?query=ben&page=2"
+    );
+  });
 });
 
 async function openSearchModal(page: Page) {
@@ -64,10 +115,21 @@ async function getInput(page: Page): Promise<Locator> {
   return page.locator("[placeholder='Search for content']");
 }
 
-async function searchForFruit(page: Page) {
+async function clearInput(page: Page) {
   const input = await getInput(page);
-  await input.type("fruit", { delay: 100 });
-  await page.waitForURL(/\?query=fruit/);
+  await input.click();
+  await input.dblclick();
+  await input.press("Backspace");
+}
+
+async function searchForFruit(page: Page) {
+  return searchFor(page, "fruit");
+}
+
+async function searchFor(page: Page, query: string) {
+  const input = await getInput(page);
+  await input.type(query, { delay: 100 });
+  await page.waitForURL(new RegExp(`/?query=${query}`));
 }
 
 async function navigateToNextPage(page: Page) {
@@ -86,10 +148,8 @@ async function searchForFruitAndNavigateToNextPage(page: Page) {
 
 async function searchTwoTimes(page: Page) {
   await searchForFruitAndNavigateToNextPage(page);
+  await clearInput(page);
   const input = await getInput(page);
-  await input.click();
-  await input.dblclick();
-  await input.press("Backspace");
   await input.type("ben", { delay: 100 });
   await page.waitForURL(/\?query=ben&page=1/);
   expect(page.url()).toBe("http://localhost:3000/?query=ben&page=1");

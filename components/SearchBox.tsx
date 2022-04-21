@@ -36,10 +36,14 @@ function SearchBox({ refine }: SearchBoxProvided) {
 
         if (searchParams.query?.length === 0) {
           setTimeout(() => {
-            router.replace(`${window.location.origin}/${nextSearchParams}`);
+            router.replace(
+              `${window.location.origin}${window.location.pathname}${nextSearchParams}`
+            );
           }, 220);
         } else if ((searchParams.query as string[])?.[0]) {
-          router.push(`${window.location.origin}/${nextSearchParams}`);
+          router.push(
+            `${window.location.origin}${window.location.pathname}${nextSearchParams}`
+          );
         }
       }
     },

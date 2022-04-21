@@ -113,12 +113,12 @@ export const CustomPagination = memo(function Pagination({
 
   const getHref = useCallback(
     (n: number) => {
+      const {slug, ...queryWithoutSlug} = router.query
       const nextSearchParams = QueryString.stringify(
-        { ...router.query, page: n + 1 },
+        { ...queryWithoutSlug, page: n + 1 },
         { addQueryPrefix: true }
       );
-
-      return `${window.origin}/${nextSearchParams}`;
+      return `${window.origin}${window.location.pathname}${nextSearchParams}`;
     },
     [router.query]
   );
