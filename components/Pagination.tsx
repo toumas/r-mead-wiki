@@ -113,20 +113,29 @@ export const Pagination = memo(function Pagination({
 
   const getHref = useCallback(
     (n: number) => {
-      const {slug, ...queryWithoutSlug} = router.query
+      const { slug, ...queryWithoutSlug } = router.query;
       const nextSearchParams = QueryString.stringify(
         { ...queryWithoutSlug, page: n + 1 },
         { addQueryPrefix: true }
       );
-      return `${window.origin}${window.location.pathname}${nextSearchParams}`;
+      if (router.query.query) {
+        const nextPath = `${(router.query.query.slice(0, -1) as string[]).join(
+          "/"
+        )}/${n + 1}`;
+        return `${window.origin}/search/${nextPath}`;
+      }
+      return `${window.origin}${window.location.pathname}`;
     },
     [router.query]
   );
 
   const currentPage = useMemo(() => {
-    const page = parseInt(router.query.page as string);
-    return Number.isNaN(page) === false ? page : currentRefinement;
-  }, [currentRefinement, router.query.page]);
+    if (router.query.query?.[0]) {
+      const [, , page] = router.query.query as string[];
+      return parseInt(page);
+    }
+    return 1;
+  }, [router.query.query]);
 
   return (
     <div className="w-full" ref={ref}>

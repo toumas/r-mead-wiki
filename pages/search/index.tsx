@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import { SearchBox } from "../../components/SearchBox";
 import { SearchModal } from "../../components/SearchModal";
-import SearchResultsPage from "./[query]";
+import SearchResultsPage from "./[...query]";
 
 export default function Index() {
   return (
