@@ -1,7 +1,16 @@
 import VisuallyHidden from "@reach/visually-hidden";
 import { useRouter } from "next/router";
 import QueryString from "qs";
-import { ChangeEvent, FormEvent, useCallback, useEffect, useRef } from "react";
+import {
+  ChangeEvent,
+  FormEvent,
+  forwardRef,
+  RefObject,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { SearchBoxProvided } from "react-instantsearch-core";
 import { connectSearchBox } from "react-instantsearch-dom";
 import tw, { styled } from "twin.macro";
@@ -11,9 +20,10 @@ const StyledStack = styled(Stack)`
   width: calc(100% - 1rem);
 `;
 
-function SearchBox({ refine }: SearchBoxProvided) {
+export const SearchBox = forwardRef<HTMLInputElement, any>(({ setFlag }, inputRef) => {
   const router = useRouter();
   const formRef = useRef<HTMLFormElement>(null);
+  // const [flag, setFlag] = useState(false)
 
   const handleSubmit = useCallback((e: FormEvent) => {
     e.preventDefault();
@@ -34,45 +44,51 @@ function SearchBox({ refine }: SearchBoxProvided) {
           { addQueryPrefix: true }
         );
 
+        // fetch("/api/page/preview").then(() => {
+        // })
+        router.push(`${window.location.origin}/search/${value}`);
+        // setFlag(true);
+
         if (searchParams.query?.length === 0) {
           setTimeout(() => {
-            router.replace(
-              `${window.location.origin}${window.location.pathname}${nextSearchParams}`
-            );
+            // router.replace(
+            //   `/search/${value}`,
+            //   `${window.location.origin}${window.location.pathname}${nextSearchParams}`
+            // );
           }, 220);
         } else if ((searchParams.query as string[])?.[0]) {
-          router.push(
-            `${window.location.origin}${window.location.pathname}${nextSearchParams}`
-          );
+          // router.push(
+          //   `${window.location.origin}${window.location.pathname}${nextSearchParams}`
+          // );
         }
       }
     },
-    [router]
+    [router, setFlag]
   );
 
-  useEffect(() => {
-    if (router.query.query) {
-      refine(router.query.query);
-    }
-  }, [refine, router.query.query]);
+  // useEffect(() => {
+  //   if (router.query.query) {
+  //     refine(router.query.query);
+  //   }
+  // }, [refine, router.query.query]);
 
-  useEffect(() => {
-    if (router.query.query || router.query.page) {
-      refine(router.query.query);
+  // useEffect(() => {
+  //   if (router.query.query || router.query.page) {
+  //     refine(router.query.query);
 
-      if (formRef.current) {
-        formRef.current.scrollIntoView();
-      }
-    }
-  }, [refine, router.query.page, router.query.query]);
+  //     if (formRef.current) {
+  //       formRef.current.scrollIntoView();
+  //     }
+  //   }
+  // }, [refine, router.query.page, router.query.query]);
 
-  const inputRef = useRef<HTMLInputElement>(null);
+  // const inputRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    if (inputRef.current) {
-      inputRef.current.focus();
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (inputRef.current) {
+  //     inputRef.current.focus();
+  //   }
+  // }, [inputRef]);
 
   return (
     <form onSubmit={handleSubmit} ref={formRef}>
@@ -106,6 +122,8 @@ function SearchBox({ refine }: SearchBoxProvided) {
       </StyledStack>
     </form>
   );
-}
+});
 
-export default connectSearchBox(SearchBox);
+SearchBox.displayName = "SearchBox"
+
+// export default connectSearchBox(SearchBox);

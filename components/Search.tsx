@@ -2,8 +2,8 @@ import algoliasearch from "algoliasearch/lite";
 import { Configure, InstantSearch } from "react-instantsearch-dom";
 import QueryString from "qs";
 import { MultipleQueriesQuery } from "@algolia/client-search";
-import Hits from "./Hits/Hits";
-import SearchBox from "./SearchBox";
+// import Hits from "./Hits/Hits";
+// import SearchBox from "./SearchBox";
 
 const algoliaClient = algoliasearch(
   process.env.NEXT_PUBLIC_ALGOLIA_APP_ID as string,
@@ -11,7 +11,7 @@ const algoliaClient = algoliasearch(
   {}
 );
 
-const searchClient = {
+export const searchClient = {
   ...algoliaClient,
   search(requests: MultipleQueriesQuery[]) {
     const searchParams = QueryString.parse(window.location.search, {
@@ -43,8 +43,8 @@ export function Search() {
         highlightPreTag="<algolia-highlight>"
         highlightPostTag="</algolia-highlight>"
       />
-      <SearchBox />
-      <Hits />
+      {/* <SearchBox /> */}
+      {/* <Hits /> */}
     </InstantSearch>
   );
 }

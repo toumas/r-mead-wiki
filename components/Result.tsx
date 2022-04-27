@@ -123,7 +123,7 @@ export const Result = memo(
     }, [done]);
 
     return (
-      <Link href={`${objectID}`} passHref={true}>
+      <Link href={`/${objectID}`} passHref={true}>
         <a className="grid grid-cols-[min-content_1fr] items-center gap-1 text-brand-green no-underline">
           <svg
             aria-hidden={true}
