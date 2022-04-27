@@ -29,7 +29,7 @@ export default function SearchResultsPage({
   forceSearch = false,
 }: SearchResultsPageProps) {
   console.log(searchResults);
-  
+
   const router = useRouter();
   const [clientSearchResults, setClientSearchResults] = useState<
     SearchResults | undefined
@@ -91,16 +91,18 @@ export default function SearchResultsPage({
           compiledSearchResultPages={compiledSearchResultPages}
           // previewMode={previewMode}
         />
-        {/* results */searchResults?.hits[0] && (
-          <Pagination
-            numberOfPages={
-              // previewMode
-              //   ? clientSearchResults?.nbPages
-              //   : searchResults?.nbPages
-              searchResults?.nbPages
-            }
-          />
-        )}
+        {
+          /* results */ searchResults?.hits[0] && (
+            <Pagination
+              numberOfPages={
+                // previewMode
+                //   ? clientSearchResults?.nbPages
+                //   : searchResults?.nbPages
+                searchResults?.nbPages
+              }
+            />
+          )
+        }
       </SearchModal>
     </>
   );
@@ -109,13 +111,18 @@ export default function SearchResultsPage({
 export async function getStaticProps(context: GetStaticPropsContext) {
   console.log("staticPropsParams: ", context);
 
-  const searchResults = await index.search(`${context.params?.query}`, {
-    hitsPerPage: 5,
-    highlightPreTag: "<algolia-highlight>",
-    highlightPostTag: "</algolia-highlight>",
-  });
+  let searchResults: SearchResults | undefined = undefined;
 
-  const objectIDs = searchResults.hits.map(({ objectID }) => objectID);
+  if (context.params?.query?.[0]) {
+    searchResults = (await index.search(`${context.params.query[0]}`, {
+      hitsPerPage: 5,
+      highlightPreTag: "<algolia-highlight>",
+      highlightPostTag: "</algolia-highlight>",
+      page: parseInt(context.params?.query?.[2]) - 1,
+    })) as unknown as SearchResults;
+  }
+
+  // const objectIDs = searchResults.hits.map(({ objectID }) => objectID);
 
   // const compiledSearchResultPages: PagePropsObjectByKey = {};
   // for (const objectID of objectIDs) {
@@ -126,7 +133,7 @@ export async function getStaticProps(context: GetStaticPropsContext) {
 
   return {
     revalidate: 1,
-    props: { searchResults, /* compiledSearchResultPages */ },
+    props: { searchResults /* compiledSearchResultPages */ },
   };
 }
 

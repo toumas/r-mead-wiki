@@ -46,7 +46,7 @@ export const SearchBox = forwardRef<HTMLInputElement, any>(({ setFlag }, inputRe
 
         // fetch("/api/page/preview").then(() => {
         // })
-        router.push(`${window.location.origin}/search/${value}`);
+        router.push(`${window.location.origin}/search/${value}/page/1`);
         // setFlag(true);
 
         if (searchParams.query?.length === 0) {
@@ -115,7 +115,7 @@ export const SearchBox = forwardRef<HTMLInputElement, any>(({ setFlag }, inputRe
           id="algolia_search"
           type="search"
           placeholder="Search for content"
-          defaultValue={router.query.query}
+          defaultValue={router.query.query?.[0]}
           onChange={handleChange}
           className="w-full bg-transparent px-1"
         />
