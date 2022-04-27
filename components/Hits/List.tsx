@@ -7,8 +7,8 @@ import { Result } from "../Result";
 import { PagePropsObjectByKey } from "./types";
 
 export interface HitsListProps {
-  results: SearchResults | null;
-  pageData: PagePropsObjectByKey;
+  results: SearchResults | undefined;
+  pageData: PagePropsObjectByKey | undefined;
   setExpanded: (value: boolean) => void;
 }
 
@@ -18,12 +18,12 @@ export function HitsList({ results, pageData, setExpanded }: HitsListProps) {
   }, [setExpanded]);
 
   return (
-    <>
+    <div className="w-full">
       <List>
         {results?.hits.map((hit: Hit) => {
           return (
             <div key={hit.objectID}>
-              {pageData[hit.objectID] && (
+              {pageData?.[hit.objectID] && (
                 <div id="search-results">
                   <Result
                     objectID={hit.objectID}
@@ -35,12 +35,12 @@ export function HitsList({ results, pageData, setExpanded }: HitsListProps) {
                   />
                 </div>
               )}
-              {!pageData[hit.objectID] && <Placeholder />}
+              {!pageData?.[hit.objectID] && <Placeholder />}
             </div>
           );
         })}
       </List>
-      <Pagination />
-    </>
+      {/* <Pagination /> */}
+    </div>
   );
 }

@@ -101,12 +101,12 @@ function getPadding(params: { [key: string]: boolean }) {
   return paddings[activeSize];
 }
 
-export const CustomPagination = memo(function Pagination({
-  currentRefinement,
-  nbPages,
+export const Pagination = memo(function Pagination({
+  currentRefinement = 1,
+  numberOfPages = 0,
 }: {
-  currentRefinement: number;
-  nbPages: number;
+  currentRefinement?: number;
+  numberOfPages?: number;
 }) {
   const [params, ref, ready] = useContainerQuery(query);
   const router = useRouter();
@@ -186,7 +186,7 @@ export const CustomPagination = memo(function Pagination({
               </Link>
             </li>
             {getPaginationArr(
-              new Array(nbPages).fill(null).map((_, index) => {
+              new Array(numberOfPages).fill(null).map((_, index) => {
                 return (
                   <li key={index}>
                     <Link href={getHref(index)} passHref={true}>
@@ -203,13 +203,13 @@ export const CustomPagination = memo(function Pagination({
             <li>
               <Link
                 href={
-                  currentPage >= nbPages
+                  currentPage >= numberOfPages
                     ? "javascript:void(0)"
                     : getHref(currentPage)
                 }
                 passHref={true}
               >
-                <Anchor unallowed={currentPage >= nbPages}>
+                <Anchor unallowed={currentPage >= numberOfPages}>
                   <VisuallyHidden>Next</VisuallyHidden>
                   <svg
                     id="next"
@@ -231,13 +231,13 @@ export const CustomPagination = memo(function Pagination({
             <li>
               <Link
                 href={
-                  currentPage >= nbPages
+                  currentPage >= numberOfPages
                     ? "javascript:void(0)"
-                    : getHref(nbPages - 1)
+                    : getHref(numberOfPages - 1)
                 }
                 passHref={true}
               >
-                <Anchor unallowed={currentPage >= nbPages}>
+                <Anchor unallowed={currentPage >= numberOfPages}>
                   <VisuallyHidden>Last</VisuallyHidden>
                   <svg
                     id="last"
@@ -268,4 +268,4 @@ export const CustomPagination = memo(function Pagination({
   );
 });
 
-export const Pagination = connectPagination(CustomPagination);
+// export const Pagination = connectPagination(CustomPagination);

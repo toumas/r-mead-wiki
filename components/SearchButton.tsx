@@ -8,7 +8,7 @@ export function SearchButton() {
   const {asPath} = useRouter();
 
   return (
-    <Link href={`${asPath}?query=`} passHref={false}>
+    <Link href={`/search`}>
       <a className="flex items-center">
         <Stack mr={tw`mr-2`}>
           <Text as="span">Search</Text>
