@@ -5,13 +5,13 @@ import { Stack } from "./Stack/Stack";
 import { Text } from "./Text";
 
 export function SearchButton() {
-  const {asPath} = useRouter();
+  let isMacOS = /(mac\sos)/i.test(window.navigator.userAgent);
 
   return (
     <Link href={`/search`}>
       <a className="flex items-center">
         <Stack mr={tw`mr-2`}>
-          <Text as="span">Search</Text>
+          <Text as="span">Search ({isMacOS ? '⌘K' : 'Ctrl+k'})</Text>
           <svg
             className="h-6 w-6"
             fill="none"
