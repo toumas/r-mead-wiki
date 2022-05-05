@@ -1,14 +1,13 @@
-import tw, { styled } from "twin.macro";
-import { memo, useCallback, useMemo } from "react";
-import { connectPagination } from "react-instantsearch-dom";
 import VisuallyHidden from "@reach/visually-hidden";
-import QueryString from "qs";
-import { useRouter } from "next/router";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import QueryString from "qs";
+import { memo, useCallback, useMemo } from "react";
+import tw, { styled } from "twin.macro";
 import { useContainerQuery } from "../hooks/useContainerQuery";
+import { usePlaceholderContext } from "../pages/search/Context";
 import { Stack } from "./Stack/Stack";
 import { Text } from "./Text";
-import { usePlaceholderContext } from "../pages/search/Context";
 
 export const StyledPagination = styled.ul`
   ${tw`
@@ -103,7 +102,6 @@ function getPadding(params: { [key: string]: boolean }) {
 }
 
 export const Pagination = memo(function Pagination({
-  currentRefinement = 1,
   numberOfPages = 0,
 }: {
   currentRefinement?: number;
@@ -115,11 +113,7 @@ export const Pagination = memo(function Pagination({
 
   const getHref = useCallback(
     (n: number) => {
-      const { slug, ...queryWithoutSlug } = router.query;
-      const nextSearchParams = QueryString.stringify(
-        { ...queryWithoutSlug, page: n + 1 },
-        { addQueryPrefix: true }
-      );
+      const { slug } = router.query;
       if (router.query.query) {
         const nextPath = `${(router.query.query.slice(0, -1) as string[]).join(
           "/"
@@ -291,5 +285,3 @@ export const Pagination = memo(function Pagination({
     </div>
   );
 });
-
-// export const Pagination = connectPagination(CustomPagination);

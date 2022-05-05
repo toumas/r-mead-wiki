@@ -14,7 +14,6 @@ export interface HitsListProps {
 }
 
 export function HitsList({ results, pageData, setExpanded }: HitsListProps) {
-  const [showPlaceholder] = usePlaceholderContext()
   useEffect(() => {
     setExpanded(true);
   }, [setExpanded]);
@@ -42,7 +41,6 @@ export function HitsList({ results, pageData, setExpanded }: HitsListProps) {
           );
         })}
       </List>
-      {/* <Pagination /> */}
     </div>
   );
 }
