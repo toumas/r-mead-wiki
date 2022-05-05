@@ -5,7 +5,6 @@ import { useRouter } from "next/router";
 import { ReactNode, useCallback } from "react";
 import tw, { styled } from "twin.macro";
 import { useContainerQuery } from "../hooks/useContainerQuery";
-import { Search } from "./Search";
 
 const query = {
   md: { minWidth: 48.5 },
@@ -28,7 +27,7 @@ export interface SearchModalProps {
 }
 
 export function SearchModal({ children, isOpen }: SearchModalProps) {
-  const { asPath, push } = useRouter();
+  const { push } = useRouter();
   const [{ md }, ref, ready] = useContainerQuery(query);
 
   const handleClose = useCallback(() => {

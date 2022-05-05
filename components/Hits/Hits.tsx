@@ -1,8 +1,6 @@
 import produce from "immer";
-import { useRouter } from "next/router";
 import { useEffect, useReducer, useState } from "react";
 import { Hit, SearchResults, SearchState } from "react-instantsearch-core";
-import { connectStateResults } from "react-instantsearch-dom";
 import tw, { styled } from "twin.macro";
 import { usePlaceholderContext } from "../../pages/search/Context";
 import { List } from "../List";
@@ -52,18 +50,10 @@ const Wrapper = styled.div<{ expanded: boolean }>`
   ${({ expanded }) => expanded && tw`h-[57.031rem]`}
 `;
 
-export function Hits({
-  searchState,
-  searchResults,
-  compiledSearchResultPages,
-  previewMode = false,
-}: HitsProps) {
-  // const validQuery = (searchState.query?.length as number) >= 3;
-  console.log(searchResults);
+export function Hits({ searchResults, previewMode = false }: HitsProps) {
   const [showPlaceholder] = usePlaceholderContext();
   const [pageData, dispatch] = useReducer(reducer, {});
   const [expanded, setExpanded] = useState<boolean>(false);
-  const router = useRouter();
 
   useEffect(() => {
     async function fetchPageJson(objectID: string) {
@@ -93,15 +83,11 @@ export function Hits({
             <Placeholder key="5" />
           </List>
         )}
-        {searchResults?.hits.length === 0 /* && validQuery */ && (
-          <p>No results found!</p>
-        )}
-        {(searchResults?.hits.length as number) > 0 /* && validQuery */ && (
+        {searchResults?.hits.length === 0 && <p>No results found!</p>}
+        {(searchResults?.hits.length as number) > 0 && (
           <HitsList
-            // @ts-ignore
             results={searchResults}
-            // @ts-ignore
-            pageData={pageData /* compiledSearchResultPages */}
+            pageData={pageData}
             setExpanded={setExpanded}
           />
         )}

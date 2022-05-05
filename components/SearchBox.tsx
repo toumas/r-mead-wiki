@@ -1,18 +1,6 @@
 import VisuallyHidden from "@reach/visually-hidden";
 import { useRouter } from "next/router";
-import QueryString from "qs";
-import {
-  ChangeEvent,
-  FormEvent,
-  forwardRef,
-  RefObject,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-import { SearchBoxProvided } from "react-instantsearch-core";
-import { connectSearchBox } from "react-instantsearch-dom";
+import { ChangeEvent, FormEvent, forwardRef, useCallback, useRef } from "react";
 import tw, { styled } from "twin.macro";
 import { usePlaceholderContext } from "../pages/search/Context";
 import { Stack } from "./Stack/Stack";
@@ -24,7 +12,6 @@ const StyledStack = styled(Stack)`
 export const SearchBox = forwardRef<HTMLInputElement, any>(({}, inputRef) => {
   const router = useRouter();
   const formRef = useRef<HTMLFormElement>(null);
-  // const [flag, setFlag] = useState(false)
   const [, setShowPlaceholder] = usePlaceholderContext();
 
   const handleSubmit = useCallback((e: FormEvent) => {
@@ -37,61 +24,12 @@ export const SearchBox = forwardRef<HTMLInputElement, any>(({}, inputRef) => {
         target: { value },
       } = event;
       if (value.length >= 3) {
-        const searchParams = QueryString.parse(window.location.search, {
-          ignoreQueryPrefix: true,
-        });
-
-        const nextSearchParams = QueryString.stringify(
-          { ...searchParams, query: value, page: 1 },
-          { addQueryPrefix: true }
-        );
-
-        // fetch("/api/page/preview").then(() => {
-        // })
         setShowPlaceholder(true);
         router.push(`${window.location.origin}/search/${value}/page/1`);
-        // setFlag(true);
-
-        if (searchParams.query?.length === 0) {
-          setTimeout(() => {
-            // router.replace(
-            //   `/search/${value}`,
-            //   `${window.location.origin}${window.location.pathname}${nextSearchParams}`
-            // );
-          }, 220);
-        } else if ((searchParams.query as string[])?.[0]) {
-          // router.push(
-          //   `${window.location.origin}${window.location.pathname}${nextSearchParams}`
-          // );
-        }
       }
     },
     [router, setShowPlaceholder]
   );
-
-  // useEffect(() => {
-  //   if (router.query.query) {
-  //     refine(router.query.query);
-  //   }
-  // }, [refine, router.query.query]);
-
-  // useEffect(() => {
-  //   if (router.query.query || router.query.page) {
-  //     refine(router.query.query);
-
-  //     if (formRef.current) {
-  //       formRef.current.scrollIntoView();
-  //     }
-  //   }
-  // }, [refine, router.query.page, router.query.query]);
-
-  // const inputRef = useRef<HTMLInputElement>(null);
-
-  // useEffect(() => {
-  //   if (inputRef.current) {
-  //     inputRef.current.focus();
-  //   }
-  // }, [inputRef]);
 
   return (
     <form onSubmit={handleSubmit} ref={formRef}>
@@ -128,5 +66,3 @@ export const SearchBox = forwardRef<HTMLInputElement, any>(({}, inputRef) => {
 });
 
 SearchBox.displayName = "SearchBox";
-
-// export default connectSearchBox(SearchBox);

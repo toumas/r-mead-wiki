@@ -1,13 +1,12 @@
+import { useHotkey } from "@react-hook/hotkey";
+import type { AppProps } from "next/app";
+import { useRouter } from "next/router";
+import { useRef } from "react";
+import { Container } from "../components/Container";
+import GlobalStyles from "../components/GlobalStyles";
+import { Header } from "../components/Header";
 import "../scripts/wdyr";
 import "../styles/globals.css";
-import type { AppProps } from "next/app";
-import GlobalStyles from "../components/GlobalStyles";
-import { Container } from "../components/Container";
-import { Header } from "../components/Header";
-import { SearchModal } from "../components/SearchModal";
-import { useHotkey } from "@react-hook/hotkey";
-import { useRef } from "react";
-import { useRouter } from "next/router";
 import { PlaceholderContextProvider } from "./search/Context";
 
 function MyApp({ Component, pageProps }: AppProps) {
