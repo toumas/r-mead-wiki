@@ -32,8 +32,8 @@ export function SearchModal({ children, isOpen }: SearchModalProps) {
   const [{ md }, ref, ready] = useContainerQuery(query);
 
   const handleClose = useCallback(() => {
-    const { origin, pathname } = window.location;
-    push(`${origin}/${pathname}`);
+    const { origin } = window.location;
+    push(`${origin}`);
   }, [push]);
 
   return (

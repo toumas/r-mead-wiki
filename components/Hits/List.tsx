@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { Hit, SearchResults } from "react-instantsearch-core";
+import { usePlaceholderContext } from "../../pages/search/Context";
 import { List } from "../List";
 import { Pagination } from "../Pagination";
 import { Placeholder } from "../Placeholder";
@@ -13,6 +14,7 @@ export interface HitsListProps {
 }
 
 export function HitsList({ results, pageData, setExpanded }: HitsListProps) {
+  const [showPlaceholder] = usePlaceholderContext()
   useEffect(() => {
     setExpanded(true);
   }, [setExpanded]);

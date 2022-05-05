@@ -5,6 +5,7 @@ export interface ListProps {
   children: ReactNode;
   padding?: TwStyle;
   border?: TwStyle;
+  [key: string]: any;
 }
 
 type StyleProps = Exclude<ListProps, "children">;
