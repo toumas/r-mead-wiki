@@ -14,16 +14,18 @@ import {
 import { SearchBoxProvided } from "react-instantsearch-core";
 import { connectSearchBox } from "react-instantsearch-dom";
 import tw, { styled } from "twin.macro";
+import { usePlaceholderContext } from "../pages/search/Context";
 import { Stack } from "./Stack/Stack";
 
 const StyledStack = styled(Stack)`
   width: calc(100% - 1rem);
 `;
 
-export const SearchBox = forwardRef<HTMLInputElement, any>(({ setFlag }, inputRef) => {
+export const SearchBox = forwardRef<HTMLInputElement, any>(({}, inputRef) => {
   const router = useRouter();
   const formRef = useRef<HTMLFormElement>(null);
   // const [flag, setFlag] = useState(false)
+  const [, setShowPlaceholder] = usePlaceholderContext();
 
   const handleSubmit = useCallback((e: FormEvent) => {
     e.preventDefault();
@@ -46,6 +48,7 @@ export const SearchBox = forwardRef<HTMLInputElement, any>(({ setFlag }, inputRe
 
         // fetch("/api/page/preview").then(() => {
         // })
+        setShowPlaceholder(true);
         router.push(`${window.location.origin}/search/${value}/page/1`);
         // setFlag(true);
 
@@ -63,7 +66,7 @@ export const SearchBox = forwardRef<HTMLInputElement, any>(({ setFlag }, inputRe
         }
       }
     },
-    [router, setFlag]
+    [router, setShowPlaceholder]
   );
 
   // useEffect(() => {
@@ -124,6 +127,6 @@ export const SearchBox = forwardRef<HTMLInputElement, any>(({ setFlag }, inputRe
   );
 });
 
-SearchBox.displayName = "SearchBox"
+SearchBox.displayName = "SearchBox";
 
 // export default connectSearchBox(SearchBox);

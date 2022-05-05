@@ -8,6 +8,7 @@ import Link from "next/link";
 import { useContainerQuery } from "../hooks/useContainerQuery";
 import { Stack } from "./Stack/Stack";
 import { Text } from "./Text";
+import { usePlaceholderContext } from "../pages/search/Context";
 
 export const StyledPagination = styled.ul`
   ${tw`
@@ -108,6 +109,7 @@ export const Pagination = memo(function Pagination({
   currentRefinement?: number;
   numberOfPages?: number;
 }) {
+  const [showPlaceholder] = usePlaceholderContext();
   const [params, ref, ready] = useContainerQuery(query);
   const router = useRouter();
 
@@ -138,138 +140,151 @@ export const Pagination = memo(function Pagination({
   }, [router.query.query]);
 
   return (
-    <div className="w-full" ref={ref}>
+    <div className="h-[5.781rem] w-full" ref={ref}>
       {ready && (
         <Stack justify={tw`justify-center`}>
           <StyledPagination>
-            <li>
-              <Link
-                href={currentPage === 1 ? "javascript:void(0)" : getHref(0)}
-                passHref={true}
-              >
-                <Anchor unallowed={currentPage === 1}>
-                  <VisuallyHidden>First</VisuallyHidden>
-                  <svg
-                    id="first"
-                    aria-hidden={true}
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-5 w-5"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M15.707 15.707a1 1 0 01-1.414 0l-5-5a1 1 0 010-1.414l5-5a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 010 1.414zm-6 0a1 1 0 01-1.414 0l-5-5a1 1 0 010-1.414l5-5a1 1 0 011.414 1.414L5.414 10l4.293 4.293a1 1 0 010 1.414z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </Anchor>
-              </Link>
-            </li>
-            <li>
-              <Link
-                href={
-                  currentPage === 1
-                    ? "javascript:void(0)"
-                    : getHref(currentPage - 2)
-                }
-                passHref={true}
-              >
-                <Anchor unallowed={currentPage === 1}>
-                  <VisuallyHidden>Previous</VisuallyHidden>
-                  <svg
-                    id="previous"
-                    aria-hidden={true}
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-5 w-5"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </Anchor>
-              </Link>
-            </li>
-            {getPaginationArr(
-              new Array(numberOfPages).fill(null).map((_, index) => {
-                return (
-                  <li key={index}>
-                    <Link href={getHref(index)} passHref={true}>
-                      <Anchor active={currentPage === index + 1}>
-                        <Text>{index + 1}</Text>
-                      </Anchor>
-                    </Link>
-                  </li>
-                );
-              }),
-              getPadding(params),
-              currentPage - 1
+            {showPlaceholder && (
+              <>
+                {new Array(9).fill(undefined).map((_, i) => (
+                  <div key={i} className="pl-2">
+                    <div className="my-[2.14rem] h-6 w-6 animate-pulse rounded-md bg-brand-bright-black"></div>
+                  </div>
+                ))}
+              </>
             )}
-            <li>
-              <Link
-                href={
-                  currentPage >= numberOfPages
-                    ? "javascript:void(0)"
-                    : getHref(currentPage)
-                }
-                passHref={true}
-              >
-                <Anchor unallowed={currentPage >= numberOfPages}>
-                  <VisuallyHidden>Next</VisuallyHidden>
-                  <svg
-                    id="next"
-                    aria-hidden={true}
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-5 w-5"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
+            {!showPlaceholder && (
+              <>
+                <li>
+                  <Link
+                    href={currentPage === 1 ? "javascript:void(0)" : getHref(0)}
+                    passHref={true}
                   >
-                    <path
-                      fillRule="evenodd"
-                      d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </Anchor>
-              </Link>
-            </li>
-            <li>
-              <Link
-                href={
-                  currentPage >= numberOfPages
-                    ? "javascript:void(0)"
-                    : getHref(numberOfPages - 1)
-                }
-                passHref={true}
-              >
-                <Anchor unallowed={currentPage >= numberOfPages}>
-                  <VisuallyHidden>Last</VisuallyHidden>
-                  <svg
-                    id="last"
-                    aria-hidden={true}
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-5 w-5"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
+                    <Anchor unallowed={currentPage === 1}>
+                      <VisuallyHidden>First</VisuallyHidden>
+                      <svg
+                        id="first"
+                        aria-hidden={true}
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-5 w-5"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M15.707 15.707a1 1 0 01-1.414 0l-5-5a1 1 0 010-1.414l5-5a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 010 1.414zm-6 0a1 1 0 01-1.414 0l-5-5a1 1 0 010-1.414l5-5a1 1 0 011.414 1.414L5.414 10l4.293 4.293a1 1 0 010 1.414z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    </Anchor>
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href={
+                      currentPage === 1
+                        ? "javascript:void(0)"
+                        : getHref(currentPage - 2)
+                    }
+                    passHref={true}
                   >
-                    <path
-                      fillRule="evenodd"
-                      d="M10.293 15.707a1 1 0 010-1.414L14.586 10l-4.293-4.293a1 1 0 111.414-1.414l5 5a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0z"
-                      clipRule="evenodd"
-                    />
-                    <path
-                      fillRule="evenodd"
-                      d="M4.293 15.707a1 1 0 010-1.414L8.586 10 4.293 5.707a1 1 0 011.414-1.414l5 5a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </Anchor>
-              </Link>
-            </li>
+                    <Anchor unallowed={currentPage === 1}>
+                      <VisuallyHidden>Previous</VisuallyHidden>
+                      <svg
+                        id="previous"
+                        aria-hidden={true}
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-5 w-5"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    </Anchor>
+                  </Link>
+                </li>
+                {getPaginationArr(
+                  new Array(numberOfPages).fill(null).map((_, index) => {
+                    return (
+                      <li key={index}>
+                        <Link href={getHref(index)} passHref={true}>
+                          <Anchor active={currentPage === index + 1}>
+                            <Text>{index + 1}</Text>
+                          </Anchor>
+                        </Link>
+                      </li>
+                    );
+                  }),
+                  getPadding(params),
+                  currentPage - 1
+                )}
+                <li>
+                  <Link
+                    href={
+                      currentPage >= numberOfPages
+                        ? "javascript:void(0)"
+                        : getHref(currentPage)
+                    }
+                    passHref={true}
+                  >
+                    <Anchor unallowed={currentPage >= numberOfPages}>
+                      <VisuallyHidden>Next</VisuallyHidden>
+                      <svg
+                        id="next"
+                        aria-hidden={true}
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-5 w-5"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    </Anchor>
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href={
+                      currentPage >= numberOfPages
+                        ? "javascript:void(0)"
+                        : getHref(numberOfPages - 1)
+                    }
+                    passHref={true}
+                  >
+                    <Anchor unallowed={currentPage >= numberOfPages}>
+                      <VisuallyHidden>Last</VisuallyHidden>
+                      <svg
+                        id="last"
+                        aria-hidden={true}
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-5 w-5"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M10.293 15.707a1 1 0 010-1.414L14.586 10l-4.293-4.293a1 1 0 111.414-1.414l5 5a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0z"
+                          clipRule="evenodd"
+                        />
+                        <path
+                          fillRule="evenodd"
+                          d="M4.293 15.707a1 1 0 010-1.414L8.586 10 4.293 5.707a1 1 0 011.414-1.414l5 5a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    </Anchor>
+                  </Link>
+                </li>
+              </>
+            )}
           </StyledPagination>
         </Stack>
       )}

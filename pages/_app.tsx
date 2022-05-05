@@ -8,6 +8,7 @@ import { SearchModal } from "../components/SearchModal";
 import { useHotkey } from "@react-hook/hotkey";
 import { useRef } from "react";
 import { useRouter } from "next/router";
+import { PlaceholderContextProvider } from "./search/Context";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const ref = useRef<HTMLDivElement>(null);
@@ -22,7 +23,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   }
 
   return (
-    <>
+    <PlaceholderContextProvider>
       <GlobalStyles />
       <div ref={ref} className="p-5">
         <Header />
@@ -30,7 +31,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           <Component {...pageProps} />
         </Container>
       </div>
-    </>
+    </PlaceholderContextProvider>
   );
 }
 

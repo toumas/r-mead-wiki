@@ -14,6 +14,7 @@ import { Pagination } from "../../components/Pagination";
 import { searchClient } from "../../components/Search";
 import { SearchBox } from "../../components/SearchBox";
 import { SearchModal } from "../../components/SearchModal";
+import { usePlaceholderContext } from "./Context";
 
 const index = searchClient.initIndex("wiki");
 
@@ -29,6 +30,8 @@ export default function SearchResultsPage({
   forceSearch = false,
 }: SearchResultsPageProps) {
   console.log(searchResults);
+  const [showPlaceholder, setShowPlaceholder] = usePlaceholderContext();
+  console.log({ showPlaceholder });
 
   const router = useRouter();
   const [clientSearchResults, setClientSearchResults] = useState<
@@ -81,28 +84,25 @@ export default function SearchResultsPage({
   //   }
   // }, [inputRef]);
 
+  useEffect(() => {
+    if (router.query.query?.[0]) {
+      setShowPlaceholder(false);
+    }
+  }, [router, setShowPlaceholder]);
+
   return (
     <>
       <SearchModal isOpen={true}>
-        <SearchBox /* setFlag={setPreviewMode} */ ref={inputCallbackRef} />
+        <SearchBox ref={inputCallbackRef} />
         <Hits
           searchState={searchState}
           searchResults={searchResults}
           compiledSearchResultPages={compiledSearchResultPages}
           // previewMode={previewMode}
         />
-        {
-          /* results */ searchResults?.hits[0] && (
-            <Pagination
-              numberOfPages={
-                // previewMode
-                //   ? clientSearchResults?.nbPages
-                //   : searchResults?.nbPages
-                searchResults?.nbPages
-              }
-            />
-          )
-        }
+        {(searchResults?.hits[0] || showPlaceholder) && (
+          <Pagination numberOfPages={searchResults?.nbPages} />
+        )}
       </SearchModal>
     </>
   );
