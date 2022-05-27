@@ -3,32 +3,30 @@ import { useRouter } from "next/router";
 import {
   MutableRefObject,
   useCallback,
+  useContext,
   useEffect,
-  useRef
+  useRef,
 } from "react";
 import { SearchResults } from "react-instantsearch-core";
+import { Context } from "../../components/Context";
 import { Hits } from "../../components/Hits/Hits";
-import { PagePropsObjectByKey } from "../../components/Hits/types";
 import { Pagination } from "../../components/Pagination";
 import { searchClient } from "../../components/Search";
 import { SearchBox } from "../../components/SearchBox";
 import { SearchModal } from "../../components/SearchModal";
-import { usePlaceholderContext } from "./Context";
 
 const index = searchClient.initIndex("wiki");
 
 export interface SearchResultsPageProps {
   searchResults: SearchResults | undefined;
-  compiledSearchResultPages: PagePropsObjectByKey | undefined;
-  forceSearch?: boolean;
 }
 
 export default function SearchResultsPage({
   searchResults,
-  compiledSearchResultPages,
-  forceSearch = false,
 }: SearchResultsPageProps) {
-  const [showPlaceholder, setShowPlaceholder] = usePlaceholderContext();
+  const { showPlaceholder, setShowPlaceholder, timeoutId } =
+    useContext(Context);
+  const queryRef = useRef<string>("");
   const router = useRouter();
 
   const inputRef = useRef<HTMLInputElement>(
@@ -42,23 +40,28 @@ export default function SearchResultsPage({
     }
   }, []);
 
-  const { hits, ...searchState } = searchResults ?? {};
-
   useEffect(() => {
-    if (router.query.query?.[0]) {
-      setShowPlaceholder(false);
+    const queryString = (router.query.query as string[])?.join(",");
+    const previousValue = String(queryRef.current);
+    if (queryString !== queryRef.current) {
+      queryRef.current = queryString;
     }
-  }, [router, setShowPlaceholder]);
+    if (previousValue !== queryString) {
+      setShowPlaceholder(false);
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    }
+    if (router.query.query?.[0]) {
+      queryRef.current = queryString;
+    }
+  }, [router.query, setShowPlaceholder, timeoutId]);
 
   return (
     <>
       <SearchModal isOpen={true}>
         <SearchBox ref={inputCallbackRef} />
-        <Hits
-          searchState={searchState}
-          searchResults={searchResults}
-          compiledSearchResultPages={compiledSearchResultPages}
-        />
+        <Hits searchResults={searchResults} />
         {(searchResults?.hits[0] || showPlaceholder) && (
           <Pagination numberOfPages={searchResults?.nbPages} />
         )}

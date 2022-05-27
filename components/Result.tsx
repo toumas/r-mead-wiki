@@ -5,8 +5,11 @@ import { MDXRemote } from "next-mdx-remote";
 import Link from "next/link";
 import { memo, useCallback, useEffect, useLayoutEffect, useRef } from "react";
 import { UnfocusableAnchor } from "./Anchor";
-import { Source } from "./Hits/types";
 import { components } from "./map";
+
+export interface Source {
+  compiledSource: string;
+}
 
 interface Range {
   start?: number;
@@ -33,7 +36,7 @@ export const Result = memo(
     highlightValue,
   }: {
     objectID: string;
-    source: Source;
+    source: Source | null;
     matchedWords: string[] | undefined;
     highlightValue?: string;
   }) {
@@ -144,10 +147,18 @@ export const Result = memo(
             tabIndex={-1}
             className="col-start-2 max-h-20 overflow-hidden"
           >
-            <MDXRemote
-              {...source}
-              components={{ ...components, a: UnfocusableAnchor }}
-            />
+            {!source && (
+              <div className="h-20 italic">
+                An error occured when loading content preview. Click here to go
+                to the page.
+              </div>
+            )}
+            {source && (
+              <MDXRemote
+                {...source}
+                components={{ ...components, a: UnfocusableAnchor }}
+              />
+            )}
           </div>
         </a>
       </Link>
