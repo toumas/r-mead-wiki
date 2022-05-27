@@ -1,8 +1,15 @@
 import VisuallyHidden from "@reach/visually-hidden";
 import { useRouter } from "next/router";
-import { ChangeEvent, FormEvent, forwardRef, useCallback, useRef } from "react";
+import {
+  ChangeEvent,
+  FormEvent,
+  forwardRef,
+  useCallback,
+  useContext,
+  useRef
+} from "react";
 import tw, { styled } from "twin.macro";
-import { usePlaceholderContext } from "../pages/search/Context";
+import { Context } from "./Context";
 import { Stack } from "./Stack/Stack";
 
 const StyledStack = styled(Stack)`
@@ -12,7 +19,8 @@ const StyledStack = styled(Stack)`
 export const SearchBox = forwardRef<HTMLInputElement, any>(({}, inputRef) => {
   const router = useRouter();
   const formRef = useRef<HTMLFormElement>(null);
-  const [, setShowPlaceholder] = usePlaceholderContext();
+  const { setShowPlaceholder } = useContext(Context);
+  const navigationTimeoutIdRef = useRef<NodeJS.Timeout>();
 
   const handleSubmit = useCallback((e: FormEvent) => {
     e.preventDefault();
@@ -23,9 +31,14 @@ export const SearchBox = forwardRef<HTMLInputElement, any>(({}, inputRef) => {
       const {
         target: { value },
       } = event;
-      if (value.length >= 3) {
+      if (value.length >= 2) {
+        if (typeof navigationTimeoutIdRef.current === "number") {
+          clearTimeout(navigationTimeoutIdRef.current);
+        }
         setShowPlaceholder(true);
-        router.push(`${window.location.origin}/search/${value}/page/1`);
+        navigationTimeoutIdRef.current = setTimeout(() => {
+          router.push(`${window.location.origin}/search/${value}/page/1`);
+        }, 273);
       }
     },
     [router, setShowPlaceholder]

@@ -1,19 +1,14 @@
 import { useEffect } from "react";
-import { Hit, SearchResults } from "react-instantsearch-core";
-import { usePlaceholderContext } from "../../pages/search/Context";
+import { SearchResults } from "react-instantsearch-core";
 import { List } from "../List";
-import { Pagination } from "../Pagination";
-import { Placeholder } from "../Placeholder";
-import { Result } from "../Result";
-import { PagePropsObjectByKey } from "./types";
+import { Hit } from "./Hit";
 
 export interface HitsListProps {
   results: SearchResults | undefined;
-  pageData: PagePropsObjectByKey | undefined;
   setExpanded: (value: boolean) => void;
 }
 
-export function HitsList({ results, pageData, setExpanded }: HitsListProps) {
+export function HitsList({ results, setExpanded }: HitsListProps) {
   useEffect(() => {
     setExpanded(true);
   }, [setExpanded]);
@@ -21,24 +16,8 @@ export function HitsList({ results, pageData, setExpanded }: HitsListProps) {
   return (
     <div className="w-full">
       <List>
-        {results?.hits.map((hit: Hit) => {
-          return (
-            <div key={hit.objectID}>
-              {pageData?.[hit.objectID] && (
-                <div id="search-results">
-                  <Result
-                    objectID={hit.objectID}
-                    matchedWords={
-                      hit._highlightResult.textContent?.matchedWords
-                    }
-                    source={pageData[hit.objectID]?.pageProps.source}
-                    highlightValue={hit._highlightResult.textContent?.value}
-                  />
-                </div>
-              )}
-              {!pageData?.[hit.objectID] && <Placeholder />}
-            </div>
-          );
+        {results?.hits.map((hit) => {
+          return <Hit key={hit.objectID} hit={hit} />;
         })}
       </List>
     </div>

@@ -1,11 +1,10 @@
 import VisuallyHidden from "@reach/visually-hidden";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import QueryString from "qs";
-import { memo, useCallback, useMemo } from "react";
+import { memo, useCallback, useContext, useMemo } from "react";
 import tw, { styled } from "twin.macro";
 import { useContainerQuery } from "../hooks/useContainerQuery";
-import { usePlaceholderContext } from "../pages/search/Context";
+import { Context } from "./Context";
 import { Stack } from "./Stack/Stack";
 import { Text } from "./Text";
 
@@ -107,13 +106,12 @@ export const Pagination = memo(function Pagination({
   currentRefinement?: number;
   numberOfPages?: number;
 }) {
-  const [showPlaceholder] = usePlaceholderContext();
+  const { showPlaceholder } = useContext(Context);
   const [params, ref, ready] = useContainerQuery(query);
   const router = useRouter();
 
   const getHref = useCallback(
     (n: number) => {
-      const { slug } = router.query;
       if (router.query.query) {
         const nextPath = `${(router.query.query.slice(0, -1) as string[]).join(
           "/"
@@ -154,10 +152,9 @@ export const Pagination = memo(function Pagination({
                     href={currentPage === 1 ? "javascript:void(0)" : getHref(0)}
                     passHref={true}
                   >
-                    <Anchor unallowed={currentPage === 1}>
+                    <Anchor id="first" unallowed={currentPage === 1}>
                       <VisuallyHidden>First</VisuallyHidden>
                       <svg
-                        id="first"
                         aria-hidden={true}
                         xmlns="http://www.w3.org/2000/svg"
                         className="h-5 w-5"
@@ -182,10 +179,9 @@ export const Pagination = memo(function Pagination({
                     }
                     passHref={true}
                   >
-                    <Anchor unallowed={currentPage === 1}>
+                    <Anchor id="previous" unallowed={currentPage === 1}>
                       <VisuallyHidden>Previous</VisuallyHidden>
                       <svg
-                        id="previous"
                         aria-hidden={true}
                         xmlns="http://www.w3.org/2000/svg"
                         className="h-5 w-5"
@@ -225,10 +221,9 @@ export const Pagination = memo(function Pagination({
                     }
                     passHref={true}
                   >
-                    <Anchor unallowed={currentPage >= numberOfPages}>
+                    <Anchor id="next" unallowed={currentPage >= numberOfPages}>
                       <VisuallyHidden>Next</VisuallyHidden>
                       <svg
-                        id="next"
                         aria-hidden={true}
                         xmlns="http://www.w3.org/2000/svg"
                         className="h-5 w-5"
@@ -253,10 +248,9 @@ export const Pagination = memo(function Pagination({
                     }
                     passHref={true}
                   >
-                    <Anchor unallowed={currentPage >= numberOfPages}>
+                    <Anchor id="last" unallowed={currentPage >= numberOfPages}>
                       <VisuallyHidden>Last</VisuallyHidden>
                       <svg
-                        id="last"
                         aria-hidden={true}
                         xmlns="http://www.w3.org/2000/svg"
                         className="h-5 w-5"
