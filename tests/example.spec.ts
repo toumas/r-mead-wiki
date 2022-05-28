@@ -30,6 +30,20 @@ test.describe("search modal", () => {
     expect(page.url()).toBe("http://localhost:3000/search/fruit/page/1");
   });
 
+  test("should show results for 'fruit' after searching again with the same query", async ({ page }) => {
+    await openSearchModal(page);
+    const input = await getInput(page);
+    await input.type("fruit", { delay: 100 });
+    const firstResult = await page.locator("text='/guides/fruit'");
+    expect(await firstResult.innerText()).toBe("/guides/fruit");
+    await page.waitForURL(/\/search\/fruit\/page\/1/);
+    expect(page.url()).toBe("http://localhost:3000/search/fruit/page/1");
+    await clearInput(page);
+    await searchForFruit(page);
+    const firstResult2 = await page.locator("text='/guides/fruit'");
+    expect(await firstResult.innerText()).toBe("/guides/fruit");
+  });
+
   test("should navigate to the next result page", async ({ page }) => {
     await searchForFruitAndNavigateToNextPage(page);
   });

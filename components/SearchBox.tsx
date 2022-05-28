@@ -6,7 +6,7 @@ import {
   forwardRef,
   useCallback,
   useContext,
-  useRef
+  useRef,
 } from "react";
 import tw, { styled } from "twin.macro";
 import { Context } from "./Context";
@@ -35,10 +35,14 @@ export const SearchBox = forwardRef<HTMLInputElement, any>(({}, inputRef) => {
         if (typeof navigationTimeoutIdRef.current === "number") {
           clearTimeout(navigationTimeoutIdRef.current);
         }
-        setShowPlaceholder(true);
-        navigationTimeoutIdRef.current = setTimeout(() => {
-          router.push(`${window.location.origin}/search/${value}/page/1`);
-        }, 273);
+        if (value !== router.query.query?.[0]) {
+          setShowPlaceholder(true);
+          navigationTimeoutIdRef.current = setTimeout(() => {
+            router.push(`${window.location.origin}/search/${value}/page/1`);
+          }, 273);
+        } else {
+          setShowPlaceholder(false);
+        }
       }
     },
     [router, setShowPlaceholder]
