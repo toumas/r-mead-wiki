@@ -4,9 +4,11 @@ import VisuallyHidden from "@reach/visually-hidden";
 import { useRouter } from "next/router";
 import { ReactNode, useCallback } from "react";
 import tw, { styled } from "twin.macro";
+import { useReadLocalStorage } from "usehooks-ts";
 import { useContainerQuery } from "../hooks/useContainerQuery";
+import { localStorageKey } from "./BackgroundPage";
 
-const query = {
+export const query = {
   md: { minWidth: 48.5 },
 };
 
@@ -29,11 +31,12 @@ export interface SearchModalProps {
 export function SearchModal({ children, isOpen }: SearchModalProps) {
   const { push } = useRouter();
   const [{ md }, ref, ready] = useContainerQuery(query);
+  const slug = useReadLocalStorage(localStorageKey);
 
   const handleClose = useCallback(() => {
     const { origin } = window.location;
-    push(`${origin}`);
-  }, [push]);
+    push(`${origin}/${slug}`);
+  }, [push, slug]);
 
   return (
     <StyledDialogOverlay isOpen={isOpen} onDismiss={handleClose}>
