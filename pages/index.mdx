@@ -32,7 +32,12 @@ export async function getStaticProps() {
         objectID: "index",
       },
     ]);
-    return { props: { source: mdxSource } };
+    return {
+      revalidate: 10,
+      props: {
+        source: mdxSource,
+      },
+    };
   } catch (error) {
     console.log(error.message);
   }
