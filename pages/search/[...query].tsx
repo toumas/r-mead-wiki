@@ -8,6 +8,7 @@ import {
   useRef,
 } from "react";
 import { SearchResults } from "react-instantsearch-core";
+import { BackgroundPage } from "../../components/BackgroundPage";
 import { Context } from "../../components/Context";
 import { Hits } from "../../components/Hits/Hits";
 import { Pagination } from "../../components/Pagination";
@@ -59,13 +60,15 @@ export default function SearchResultsPage({
 
   return (
     <>
-      <SearchModal isOpen={true}>
-        <SearchBox ref={inputCallbackRef} />
-        <Hits searchResults={searchResults} />
-        {(searchResults?.hits[0] || showPlaceholder) && (
-          <Pagination numberOfPages={searchResults?.nbPages} />
-        )}
-      </SearchModal>
+      <BackgroundPage>
+        <SearchModal isOpen={true}>
+          <SearchBox ref={inputCallbackRef} />
+          <Hits searchResults={searchResults} />
+          {(searchResults?.hits[0] || showPlaceholder) && (
+            <Pagination numberOfPages={searchResults?.nbPages} />
+          )}
+        </SearchModal>
+      </BackgroundPage>
     </>
   );
 }

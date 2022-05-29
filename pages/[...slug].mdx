@@ -1,15 +1,36 @@
+import {useEffect} from "react";
 import { serialize } from "next-mdx-remote/serialize";
 import { MDXRemote } from "next-mdx-remote";
 import { promises as fs } from "fs";
 import path from "path";
+import { mutate } from "swr";
 import { RedditAPI } from "../RedditAPI";
 import { components } from "../components/map";
 import { buildAlgoliaSearch } from "../scripts/build-algolia-search";
 import { slugToObject } from "../utils";
 import convertMarkdownToRedditFlavor from "../convertMarkdownToRedditFlavor";
 import { supabase } from "../supabaseClient";
+import { query } from "../components/SearchModal.tsx";
+import { useContainerQuery } from "../hooks/useContainerQuery";
+
+export function prefetchBackgroundPage(pagePath) {
+  mutate(
+    `/api/page/${pagePath}`,
+    fetch(`/api/page/${pagePath}`).then((res) => res.json())
+  );
+}
 
 <MDXRemote {...props.source} components={components} />
+
+export default function Layout({ children, pagePath }) {
+  const [{ md }, ref, ready] = useContainerQuery(query);
+  useEffect(() => {
+    if (md && ready) {
+      prefetchBackgroundPage(pagePath);
+    }
+  }, [pagePath, md, ready, prefetchBackgroundPage]);
+  return <div ref={ref}>{children}</div>;
+}
 
 export async function getStaticProps({ params: { slug } }) {
   const {
@@ -35,7 +56,12 @@ export async function getStaticProps({ params: { slug } }) {
       objectID: `${parentPath}/${filename}`,
     },
   ]);
-  return { props: { source: mdxSource } };
+  return {
+    props: {
+      source: mdxSource,
+      pagePath: `${parentPath}/${filename}`,
+    },
+  };
 }
 
 export async function getStaticPaths() {

@@ -1,7 +1,9 @@
 import { useHotkey } from "@react-hook/hotkey";
 import type { AppProps } from "next/app";
 import { useRouter } from "next/router";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
+import { useLocalStorage, useReadLocalStorage } from "usehooks-ts";
+import { localStorageKey } from "../components/BackgroundPage";
 import { Container } from "../components/Container";
 import { PlaceholderContextProvider } from "../components/Context";
 import GlobalStyles from "../components/GlobalStyles";
@@ -12,6 +14,8 @@ import "../styles/globals.css";
 function MyApp({ Component, pageProps }: AppProps) {
   const ref = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  const [, setLastViewedPage] = useLocalStorage(localStorageKey, "index");
+  const previousLastViewedPage = useReadLocalStorage(localStorageKey);
 
   if (typeof window !== "undefined") {
     // This should be safe to do because of how Next.js handles client side
@@ -20,6 +24,21 @@ function MyApp({ Component, pageProps }: AppProps) {
       router.push("/search");
     });
   }
+
+  useEffect(() => {
+    const path =
+      router.pathname === "/"
+        ? "index"
+        : (router.query.slug as string[])?.join("/") ?? previousLastViewedPage;
+    if (previousLastViewedPage !== path) {
+      setLastViewedPage(path);
+    }
+  }, [
+    previousLastViewedPage,
+    router.pathname,
+    router.query.slug,
+    setLastViewedPage,
+  ]);
 
   return (
     <PlaceholderContextProvider>

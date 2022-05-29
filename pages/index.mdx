@@ -4,6 +4,7 @@ import { RedditAPI } from "../RedditAPI";
 import { components } from "../components/map";
 import { buildAlgoliaSearch } from "../scripts/build-algolia-search";
 import convertMarkdownToRedditFlavor from "../convertMarkdownToRedditFlavor";
+import { supabase } from "../supabaseClient";
 
 <MDXRemote {...props.source} components={components} />
 
@@ -15,6 +16,16 @@ export async function getStaticProps() {
     const { convertedMarkdown, textContent } =
       convertMarkdownToRedditFlavor(content_md);
     const mdxSource = await serialize(convertedMarkdown);
+    try {
+      const { data, error } = await supabase.storage
+        .from("compiled-pages")
+        .upload(
+          `index.json`,
+          JSON.stringify({ pageProps: { source: mdxSource } })
+        );
+    } catch (catchedError) {
+      console.warn(catchedError);
+    }
     await buildAlgoliaSearch([
       {
         textContent,
