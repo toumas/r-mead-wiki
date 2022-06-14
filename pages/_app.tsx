@@ -30,7 +30,10 @@ function MyApp({ Component, pageProps }: AppProps) {
       router.pathname === "/"
         ? "index"
         : (router.query.slug as string[])?.join("/") ?? previousLastViewedPage;
-    if (previousLastViewedPage !== path) {
+    if (
+      previousLastViewedPage !== path &&
+      document.visibilityState === "visible"
+    ) {
       setLastViewedPage(path);
     }
   }, [
