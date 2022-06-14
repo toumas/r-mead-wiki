@@ -86,14 +86,14 @@ export async function getStaticProps(context: GetStaticPropsContext) {
   }
 
   return {
-    revalidate: 60 * 15,
+    revalidate: 10,
     props: { searchResults },
   };
 }
 
 export async function getStaticPaths(...staticPathsParams: any[]) {
   return {
-    fallback: true,
+    fallback: 'blocking',
     paths: [],
   };
 }
