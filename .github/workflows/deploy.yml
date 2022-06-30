@@ -1,0 +1,17 @@
+name: deploy to vercel
+
+on:
+  schedule:
+    - cron:  '00 05 * * *'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: amondnet/now-deployment@v2
+        with:
+          zeit-token: ${{ secrets.VERCEL_TOKEN }}
+          now-args: '--prod'
+          now-org-id: ${{ secrets.ORGID }}
+          now-project-id: ${{ secrets.PROJECTID}}
