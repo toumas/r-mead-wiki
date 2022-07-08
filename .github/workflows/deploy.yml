@@ -8,10 +8,22 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+      - name: Set VERCEL_TOKEN value
+        id: step_VERCEL_TOKEN
+        run: |
+          echo "VERCEL_TOKEN=${{ secrets.VERCEL_TOKEN }}" >> $GITHUB_ENV
+      - name: Set ORGID value
+        id: step_ORGID
+        run: |
+          echo "ORGID=${{ secrets.ORGID }}" >> $GITHUB_ENV
+      - name: Set PROJECTID value
+        id: step_PROJECTID
+        run: |
+          echo "PROJECTID=${{ secrets.PROJECTID }}" >> $GITHUB_ENV
       - uses: actions/checkout@v2
       - uses: amondnet/now-deployment@v2
         with:
-          zeit-token: ${{ secrets.VERCEL_TOKEN }}
+          zeit-token: ${{ env.VERCEL_TOKEN }}
           now-args: '--prod'
-          now-org-id: ${{ secrets.ORGID }}
-          now-project-id: ${{ secrets.PROJECTID}}
+          now-org-id: ${{ env.ORGID }}
+          now-project-id: ${{ env.PROJECTID}}
