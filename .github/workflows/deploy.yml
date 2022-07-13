@@ -21,9 +21,9 @@ jobs:
         run: |
           echo "PROJECTID=${{ secrets.PROJECTID }}" >> $GITHUB_ENV
       - uses: actions/checkout@v2
-      - uses: amondnet/now-deployment@v2
+      - uses: amondnet/vercel-action@v20
         with:
-          zeit-token: ${{ env.VERCEL_TOKEN }}
-          now-args: '--prod'
-          now-org-id: ${{ env.ORGID }}
-          now-project-id: ${{ env.PROJECTID}}
+          vercel-token: ${{ env.VERCEL_TOKEN }}
+          vercel-args: '--prod'
+          vercel-org-id: ${{ env.ORGID }}
+          vercel-project-id: ${{ env.PROJECTID}}
